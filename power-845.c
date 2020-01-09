@@ -54,6 +54,7 @@ static int display_fd;
 #define SYS_DISPLAY_PWR "/sys/kernel/hbtp/display_pwr"
 
 #define NUM_PERF_MODES 3
+#define BATTERY_SAVER_TOGGLE "/sys/module/battery_saver/parameters/enabled"
 
 const int kMinInteractiveDuration = 100;  /* ms */
 const int kMaxInteractiveDuration = 5000; /* ms */
@@ -266,6 +267,9 @@ int power_hint_override(power_hint_t hint, void* data) {
             break;
         case POWER_HINT_LAUNCH:
             ret_val = process_activity_launch_hint(data);
+            break;
+        case POWER_HINT_LOW_POWER:
+            ret_val = sysfs_write(BATTERY_SAVER_TOGGLE, data ? "Y" : "N");
             break;
         default:
             break;
